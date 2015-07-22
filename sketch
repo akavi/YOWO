@@ -1,0 +1,47 @@
+Everything's an object or a function
+
+~ group by space
+Lexical scoping (no sigil or _)
+Unit: block
+Root: File
+
+~ group by purpose
+Module scoping #
+Unit: module
+Root: Global
+
+~ group by time
+Dynamic scoping $
+Unit: stackframe
+Root: Main
+
+~ group by behaviour
+Prototypal scoping :
+Unit: object
+Root: Object
+
+#:children
+#:parent
+#:in
+#:vars
+
+Need prototype single inheritance
+Need to understand what cloning means
+
+#foo = Module:new[[]-> {
+  #bar = Module:new[[]->
+  #baz = Module:new
+}]
+
+#foo:using ()->
+  #bar:open do
+
+
+#foo#bar#baz
+
+
+object:method()
+
+
+object = Object:new ()->
+  :method =
