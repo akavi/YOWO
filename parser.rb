@@ -4,18 +4,13 @@ class Lexer
     ']' => 'CLOSE_INVOKE',
     '[' => 'OPEN_PARAMS_OR_INVOKE',
     '==' => 'EQUALS',
-    '&&' => 'AND',
-    '||' => 'OR',
     '!' => 'NEGATE',
-    '&=' => 'REASSIGN',
     '=' => 'ASSIGN',
-    ':' => 'OBJ_SIGIL',
-    '_' => 'LEX_SIGIL',
-    '$' => 'DYN_SIGIL',
-    '#' => 'MOD_SIGIL',
+    '.' => 'LOCAL_SIGIL',
+    '&' => 'ROOT_SIGIL',
+    '@' => 'PARENT_SIGIL',
     '{' => 'OPEN_BLOCK',
     '}' => 'CLOSE_BLOCK',
-    '~' => 'INVOKE',
     '(' => 'OPEN_PAREN',
     ')' => 'CLOSE_PAREN',
     ',' => 'SEPARATOR',
@@ -32,37 +27,44 @@ end
 class Parser
   GRAMMAR = {
     'block' => 'root'
+
+    'expression END_LINE' => 'block'
     'block expression END_LINE' => 'block'
+
+    'if_block' => 'expression'
+    'function' => 'expression'
+    'invocation' => 'expression'
+    'assignment' => 'expression'
+    'variable' => 'expression'
+    'literal' => 'expression'
+    'OPEN_PAREN expression CLOSE_PAREN' => 'expression'
+    'expression EQUALS expression' => 'expression'
+    'NEGATE expression' => 'expression'
+
     'params OPEN_BLOCK block CLOSE_BLOCK' => 'function'
     'OPEN_PARAMS CLOSE_PARAMS' => 'params'
-    'OPEN_PARAMS lhs CLOSE_PARAMS' => 'params'
+    'OPEN_PARAMS variable CLOSE_PARAMS' => 'params'
     'OPEN_PARAMS param_list CLOSE_PARAMS' => 'params'
-    'lhs SEPARATOR lhs' => 'param_list'
-    'expression END_LINE' => 'block'
-    'expression obj_var arguments' => 'expression'
+    'variable SEPARATOR variable' => 'param_list'
+
+    'expression arguments' => 'invocation'
     'OPEN_INVOKE CLOSE_INVOKE' => 'arguments'
     'OPEN_INVOKE expression CLOSE_INVOKE' => 'arguments'
     'OPEN_INVOKE expression SEPARATOR expression CLOSE_INVOKE' => 'arguments'
-    'expression obj_var' => 'expression'
-    'NUM' => 'expression'
-    'TRUE' => 'expression'
-    'FALSE' => 'expression'
-    'STRING' => 'expression'
-    'lhs' => 'expression'
-    'assignment' => 'expression'
-    'reassignment' => 'expression'
-    'if_block' => 'expression'
+
     'IF expression OPEN_BLOCK block CLOSE_BLOCK' => 'if_block'
-    'OBJ_SIGIL REF' => 'obj_var'
-    'LEX_SIGIL REF' => 'lex_var'
-    'DYN_SIGIL REF' => 'dyn_var'
-    'MOD_SIGIL REF' => 'mod_var'
-    'obj_var' => 'lhs'
-    'lex_var' => 'lhs'
-    'dyn_var' => 'lhs'
-    'mod_var' => 'lhs'
-    'lhs ASSIGN expression' => 'assignment'
-    'lhs REASSIGN expression' => 'reassignment'
+
+    'variable ASSIGN expression' => 'assignment'
+
+    'REF' => 'variable'
+    'ROOT_SIGIL REF' => 'variable'
+    'PARENT_SIGIL REF' => 'variable'
+    'expression LOCAL_SIGIL REF' => 'variable'
+
+    'NUM' => 'literal'
+    'TRUE' => 'literal'
+    'FALSE' => 'literal'
+    'STRING' => 'literal'
   }
 end
 

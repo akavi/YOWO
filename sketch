@@ -29,7 +29,7 @@ Need prototype single inheritance
 Need to understand what cloning means
 
 #foo = Module:new[[]-> {
-  #bar = Module:new[[]->
+  @bar = Module:new[[]->
   #baz = Module:new
 }]
 
